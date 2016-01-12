@@ -9,7 +9,6 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
 
   # Dependencies
-  s.add_dependency 'version',     '~> 1.0.0'
   s.add_dependency 'termbox-ffi', '~> 0.0.3'
   s.add_development_dependency 'rake', '~> 10.1.1'
   

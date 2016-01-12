@@ -12,6 +12,8 @@
 
 TODO
 
+TODO: Note that when using MRuby, the include/mrbconf.h should define MRB_UTF8_STRING
+
 ## Copyright
 
 Copyright © 2015 Ryan Scott Lewis <ryan@rynet.us>.

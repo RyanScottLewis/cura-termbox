@@ -61,21 +61,6 @@
 #  */
 # SO_IMPORT int tb_select_output_mode(int mode);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 if Kernel.respond_to?(:require)
   require "termbox"
   require "cura/color"
@@ -83,10 +68,8 @@ end
 
 module Cura
   module Termbox
-    
     # A cached map comparing a color's rgb values with the 256 terminal color codes.
     module ColorMapper
-      
       COLOR_CODES = [
         Color.new(0, 0, 0),
         Color.new(128, 0, 0),
@@ -345,42 +328,42 @@ module Cura
         Color.new(228, 228, 228),
         Color.new(238, 238, 238)
       ]
-      
+
       CACHE = {}
-      
+
       class << self
         # Find the closest terminal color code from the given RGB values.
         #
         # @param [#to_i] number_of_colors The number of colors in the code list to search. 9 is Termbox without 256 colors enabled I.E. 3-bit.
         # @return [Integer]
-        def code(color, number_of_colors=256)
+        def code(color, _number_of_colors=256)
           code = CACHE[color.hex]
-          
+
           if code.nil?
             # code = find_closest_code(rgb, number_of_colors)
-            
+
             distances = COLOR_CODES.map { |code| code - color }
             code = distances.each_with_index.min[1]
-            
+
             CACHE[color.hex] = code
           end
-          
+
           code
         end
-        
+
         protected
-        
+
         def find_closest_code(rgb, number_of_colors=256)
           last = nil
           COLOR_CODES.first(number_of_colors).each_with_index do |color, code|
             difference = compare_rgb_array(rgb, color)
-            
+
             last = { difference: difference, code: code } if last.nil? || difference < last[:difference]
           end
-          
+
           last.nil? ? nil : last[:code]
         end
-        
+
         def compare_rgb_array(a1, a2)
           Math.sqrt(
             (a1[0] - a2[0]).abs ^ 2 +
@@ -388,10 +371,7 @@ module Cura
             (a1[2] - a2[2]).abs ^ 2
           )
         end
-        
       end
-      
     end
-    
   end
 end

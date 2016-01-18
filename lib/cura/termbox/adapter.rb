@@ -1,100 +1,98 @@
 if Kernel.respond_to?(:require)
   require "cura/adapter"
-  
+
   require "cura/event/key_down"
   require "cura/event/mouse_button"
   require "cura/event/mouse_wheel_down"
   require "cura/event/mouse_wheel_up"
   require "cura/event/resize"
-  
+
   require "cura/termbox/error/unsupported_terminal"
   require "cura/termbox/error/failed_to_open_tty"
   require "cura/termbox/error/pipe_trap_error"
   require "cura/termbox/error/not_running"
-  
+
   require "cura/termbox/component/base"
-  
+
   require "cura/termbox/pencil"
   require "cura/termbox/window"
-  
+
   require "termbox"
 end
 
 module Cura
   module Termbox
-    
     # Cura adapter for Termbox.
     class Adapter < Cura::Adapter
-      
       mixin Cura::Pencil => Termbox::Pencil
       mixin Cura::Window => Termbox::Window
       mixin Cura::Component::Base => Termbox::Component::Base
-      
+
       def setup
         case ::Termbox.tb_init
           when ::Termbox::TB_EUNSUPPORTED_TERMINAL then raise Termbox::Error::UnsupportedTerminal
           when ::Termbox::TB_EFAILED_TO_OPEN_TTY   then raise Termbox::Error::FailedToOpenTTY
           when ::Termbox::TB_EPIPE_TRAP_ERROR      then raise Termbox::Error::PipeTrapError
         end
-        
+
         ::Termbox.tb_select_input_mode(::Termbox::TB_INPUT_ESC | ::Termbox::TB_INPUT_MOUSE)
         # ::Termbox.tb_select_output_mode(::Termbox::TB_OUTPUT_216)
         ::Termbox.tb_select_output_mode(::Termbox::TB_OUTPUT_256)
 
         super
       end
-      
+
       def clear
         ::Termbox.tb_clear
       end
-      
+
       def present
         ::Termbox.tb_present
       end
-      
+
       def cleanup
         ::Termbox.tb_shutdown
-        
+
         super
       end
-      
+
       def set_cursor(x, y)
         ::Termbox.tb_set_cursor(x, y)
       end
-      
+
       def hide_cursor
         ::Termbox.tb_set_cursor(::Termbox::TB_HIDE_CURSOR, ::Termbox::TB_HIDE_CURSOR)
       end
-      
+
       def poll_event
         event = ::Termbox::Event.new
         ::Termbox.tb_poll_event(event)
-        
+
         convert_termbox_event_to_cura_event(event)
       end
-      
+
       def peek_event(milliseconds)
         event = ::Termbox::Event.new
         ::Termbox.tb_peek_event(event, milliseconds)
-        
+
         convert_termbox_event_to_cura_event(event)
       end
-      
+
       protected
-      
+
       def convert_termbox_event_to_cura_event(event)
         return nil if event.nil? # TODO: Would it even be nil? Wouldnt it be -1 on errors?
-        
+
         event = case event[:type]
           when ::Termbox::TB_EVENT_KEY
             if event[:key] != 0
               name = convert_termbox_key_to_cura_key_name(event[:key])
-              
+
               name.nil? ? convert_termbox_control_key_to_cura_event(event[:key]) : Event::KeyDown.new(name: name)
             elsif event[:ch] != 0
               character = event[:ch].chr
               key_name = Cura::Key.name_from_character(character)
-              
+
               Event::KeyDown.new(name: key_name)
             end
           when ::Termbox::TB_EVENT_MOUSE
@@ -108,10 +106,10 @@ module Cura
             end
           when ::Termbox::TB_EVENT_RESIZE then Event::Resize.new(width: event[:w], height: event[:h])
         end
-        
+
         event
       end
-      
+
       def convert_termbox_control_key_to_cura_event(key)
         case key
           # when ::Termbox::TB_KEY_CTRL_2                  then Event::KeyDown.new( name: :"2", control: true ) # clash with 'CTRL_TILDE'
@@ -155,7 +153,7 @@ module Cura
           when ::Termbox::TB_KEY_CTRL_UNDERSCORE         then Event::KeyDown.new(name: :underscore, control: true) # clash with 'CTRL_7' # clash with 'CTRL_SLASH'
         end
       end
-      
+
       def convert_termbox_key_to_cura_key_name(key)
         case key
           when ::Termbox::TB_KEY_F1          then :f1
@@ -189,8 +187,6 @@ module Cura
           when ::Termbox::TB_KEY_TAB         then :tab
         end
       end
-      
     end
-    
   end
 end

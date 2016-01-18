@@ -1,12 +1,12 @@
 # Cura Termbox FFI Adapter
 
-[Cura][cura] adapter for [Termbox][termbox] using [rb_termbox][rb_termbox].
+[Cura][cura] adapter for [Termbox][termbox].
 
 ## Install
 
-### Bundler: `gem 'cura-adapter-termbox-ffi'`
+### Bundler: `gem 'cura-termbox'`
 
-### RubyGems: `gem install cura-adapter-termbox-ffi`
+### RubyGems: `gem install cura-termbox`
 
 ## Usage
 
@@ -22,4 +22,3 @@ The MIT License (MIT) - See LICENSE for further details.
 
 [cura]: https://github.com/RyanScottLewis/cura
 [termbox]: https://github.com/nsf/termbox
-[rb_termbox]: https://github.com/jamescook/rb_termbox

@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
 
   # Variables
   s.author      = 'Ryan Scott Lewis'
-  s.email       = 'ryan@rynet.us'
+  s.email       = 'ryanscottlewis@gmail.com'
   s.summary     = 'Cura Termbox adapter.'
   s.license     = 'MIT'
 

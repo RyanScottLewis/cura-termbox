@@ -16,7 +16,7 @@ TODO: Note that when using MRuby, the include/mrbconf.h should define MRB_UTF8_S
 
 ## Copyright
 
-Copyright © 2015 Ryan Scott Lewis <ryan@rynet.us>.
+Copyright © 2015 Ryan Scott Lewis <ryanscottlewis@gmail.com>.
 
 The MIT License (MIT) - See LICENSE for further details.
 
